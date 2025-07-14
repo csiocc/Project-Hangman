@@ -6,6 +6,7 @@ module Round
     game_instance = Game.start(game_instance)
     game_instance.get_word if loaded
 
+    
     until game_instance.win? || game_instance.lives == 0
 
       save_value = game_instance.to_json
@@ -37,7 +38,6 @@ module Round
 
       else
         system 'clear'
-
         game_instance.compare
         p "Points: #{game_instance.points}"
         game_instance.display_result

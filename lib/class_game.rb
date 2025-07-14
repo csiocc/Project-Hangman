@@ -84,7 +84,12 @@ class Game
 
     if @input.length > 1
       p 'invalid input, only 1 Char'
-      get_input
+      self.display_lives
+      self.display_result
+      until @input.length <= 1
+        input = gets.chomp
+        @input = input
+      end
     end
 
     @current_word.each_with_index do |char, i| # compare each letter for match
