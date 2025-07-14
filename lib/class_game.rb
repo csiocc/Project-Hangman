@@ -4,7 +4,7 @@ require_relative 'module_words.rb'
 
 class Game
   include Words
-  attr_reader :loaded
+  attr_reader :loaded, :points
   attr_accessor :lives, :current_word, :result_displ
   
 
@@ -15,8 +15,7 @@ class Game
     @current_word = current_word
     @incorrects = incorrects
     @input = ""
-    @loaded = false
-    puts "New game initialized. Welcome to Hangman! Insert " + "'exit' 'save' or 'load'".bold + "if needed."
+    puts "New game initialized. Welcome to Hangman! Insert " + "'exit', 'save', 'load' or 'loadlast'".bold + "if needed."
     p "#{@lives} lives left."
   end
   #####################
@@ -69,7 +68,7 @@ class Game
   end
 
   def get_input
-    p "Type 1 Letter"
+    p "Type 1 Char"
     input = gets.chomp
     @input = input
   end
@@ -80,6 +79,11 @@ class Game
     temp_lives = @lives
     temp_points = @points.dup
     temp_incorrects = @incorrects.dup
+ 
+    if @input.length > 1
+        p "invalid input, only 1 Char"
+        get_input
+    end
 
     @current_word.each_with_index do |char, i|  #compare each letter for match
       

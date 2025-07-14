@@ -7,16 +7,14 @@ module SaveGame
     f.write "#{save_value}"
     f.close
 
-    if File.exist? "saves/#{save_name}"
+    if File.exist? "saves/#{save_name}.json"
       p "Filename allready exists, try again."
     else
-      File.rename 'saves/tempfile', "saves/#{save_name}"
-      if File.exist? "saves/#{save_name}" #checks if save_name allready exists and return successful if yes
+      File.rename 'saves/tempfile', "saves/#{save_name}.json"
+      if File.exist? "saves/#{save_name}.json" #checks if save_name allready exists and return successful if yes
         puts "Save successful saved as '#{save_name}'"
       end
     end
-
-    
   end
 end
 
@@ -37,8 +35,17 @@ module LoadGame
       p "Available Saves:"
       puts Dir["saves/*.json"]
     end
+  end 
+end
 
+module DeleteSave
+  def delete_save(del_name)
+    p "are you sure you want to delete #{del_name} y/n"
+    answer = gets.chomp
+    if answer == "y" && File.exist?("saves/#{del_name}.json")
+      File.delete("saves/#{del_name}.json")
+      p "'#{del_name}' Successfully deleted."
+    else 
+    end
   end
-
-  
 end

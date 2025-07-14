@@ -9,9 +9,7 @@ module Words
       File.readlines(txt_file).each do |line|
         words = words + line.gsub(/[^a-z\s]/, '').split(' ')
       end
-
-                
-
+      
       words.each do |word|
         if word.length > 5 && word.length < 12
           filtered_words.push(word)
