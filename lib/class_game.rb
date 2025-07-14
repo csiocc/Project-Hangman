@@ -1,6 +1,11 @@
 require 'json'
 require_relative 'module_words.rb'
 
+  class String
+    def bold
+        "\e[1m#{self}\e[22m" 
+    end
+  end
 
 class Game
   include Words

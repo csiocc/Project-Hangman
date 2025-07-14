@@ -27,8 +27,6 @@ module LoadGame
       load_name = "saves/#{load_name}.json"
       load_file = File.read(load_name)
       game_instance_new = Game.from_json(load_file)
-       # p "#{@lives} Lives left"
-      p game_instance_new.current_word if Debug
       game_instance_new.display_result
     else
       p "Failed to load '#{load_name}' File does not exist, try again."
@@ -49,3 +47,4 @@ module DeleteSave
     end
   end
 end
+
