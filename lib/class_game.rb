@@ -1,64 +1,127 @@
 require 'json'
 require_relative 'module_words.rb'
-Debug = true
+
 
 class Game
   include Words
+  attr_reader :loaded
+  attr_accessor :lives, :current_word, :result_displ
   
-  def initialize # Variables for Save
-    @points = 0
-    @result_displ = []
-    @lives = "6"
-    @current_word = nil
+
+  def initialize(points, result_displ, lives, current_word, incorrects)# Variables for Save
+    @points = points
+    @result_displ = result_displ
+    @lives = lives
+    @current_word = current_word
+    @incorrects = incorrects
     @input = ""
-    puts "New game initialized. Welcome to Hangman! Your Word to guess will be between 5-12 Chars long."
+    @loaded = false
+    puts "New game initialized. Welcome to Hangman! Insert " + "'exit' 'save' or 'load'".bold + "if needed."
+    p "#{@lives} lives left."
   end
   #####################
   
-  def self.get_word
-    @current_word = Words.word_sample.split("")
+  def to_json
+    JSON.dump ({
+      :points => @points,
+      :result_displ => @result_displ,
+      :lives => @lives,
+      :current_word => @current_word,
+      :incorrects => @incorrects
+    })
+  end
+
+  def self.from_json(string)
+    data = JSON.load string
+    self.new(data["points"], data["result_displ"], data["lives"], data["current_word"], data["incorrects"])
+  end
+  
+  def self.start(instance) #self initializer
+    points = 0
+    result_displ = []
+    lives = 6
+    current_word = nil
+    incorrects = []
+    instance = Game.new(points, result_displ, lives, current_word, incorrects)
+    
+  end
+
+  def current_word
+    @current_word
+  end
+  
+  def get_word
+    temp_word = Words.word_sample.split("")
+    @current_word = temp_word
     array = []
     @current_word.length.times do
       array.push("-")
       @result_displ = array
     end
+    p "The Word to guess is #{@current_word.length} Chars long."
+    self.display_result
     p @current_word if Debug
   end
 
-  def self.display_result
+  def display_result
     result = @result_displ.join("")
     p result
   end
 
-  def self.get_input
+  def get_input
     p "Type 1 Letter"
     input = gets.chomp
     @input = input
   end
 
-  def self.compare
-    temp_result = @result_displ
-    @current_word.each_with_index do |word, i|  #compare each letter for match
-      i += 1
-      if word == @input.downcase
-        temp_result[i-1] = word         #replace letter if match
+  def compare
+    temp_result = @result_displ.dup
+    got_match = false
+    temp_lives = @lives
+    temp_points = @points.dup
+    temp_incorrects = @incorrects.dup
+
+    @current_word.each_with_index do |char, i|  #compare each letter for match
+      
+      if char == @input.downcase
+        temp_result[i] = char         #replace letter if match
         @result_displ = temp_result
+        got_match = true
       end
+      i += 1 
     end
+
+    if got_match
+      temp_points += 2
+      @points = temp_points
+      p "Gotcha! +2 Points your Score is: #{@points}"
+    end
+      
+    if got_match == false
+        temp_incorrects.push(@input.to_s)
+        @incorrects = temp_incorrects
+        temp_lives -= 1
+        @lives = temp_lives
+    end
+    puts "incorects guesses #{@incorrects}"
   end
 
-  def self.win?
+  def win?
+    
+    if @lives == 0 
+      p "You loose!"  
+    end
     if @result_displ.include?("-")
-      p "still no win"
       return false
-    else return true
+    else 
+      p "You Win! Your Score is: #{@points}"
+      return true
     end
   end
 
-  def self.display_lives
+  def display_lives
     p "#{@lives} Lives left."
   end
 
 end
 
-game_one = Game.new
