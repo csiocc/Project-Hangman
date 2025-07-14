@@ -1,6 +1,7 @@
 require 'json'
 
 module SaveGame
+  
   def save(save_name, save_value)
     f = File.new 'saves/tempfile', 'w'
     f.write "#{save_value}"
@@ -24,12 +25,13 @@ module LoadGame
       p "successfully loaded #{load_name}"
       load_name = "saves/#{load_name}.json"
       load_file = File.read(load_name)
-      game_instance_new = Game.from_json(load_file)
-      game_instance_new.display_result
+      game_instance= Game.from_json(load_file)
+      game_instance.display_result
     else
+      saves = Dir.glob('saved/*').map { |file| file[(file.index('/') + 1)...(file.index('.'))] }
       p "Failed to load '#{load_name}' File does not exist, try again."
       p 'Available Saves:'
-      puts Dir['saves/*.json']
+      puts saves
     end
   end
 end

@@ -10,7 +10,7 @@ end
 class Game
   include Words
   attr_reader :loaded, :points
-  attr_accessor :lives, :current_word, :result_displ
+  attr_accessor :lives, :current_word, :result_displ, :new
 
   def initialize(points, result_displ, lives, current_word, incorrects) # Variables for Save
     @points = points
@@ -19,6 +19,7 @@ class Game
     @current_word = current_word
     @incorrects = incorrects
     @input = ''
+    @new = false
     puts 'New game initialized. Welcome to Hangman! Insert ' + "'exit', 'save', 'load' or 'loadlast'".bold + 'if needed.'
     p "#{@lives} lives left."
   end

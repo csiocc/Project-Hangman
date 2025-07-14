@@ -1,7 +1,10 @@
+
+
 module Round
-  def play_round
+  
+  def play_round(loaded)
     game_instance = Game.start(game_instance)
-    game_instance.get_word
+    game_instance.get_word if loaded
 
     until game_instance.win? || game_instance.lives == 0
 
@@ -21,7 +24,9 @@ module Round
         LoadGame.load(load_name)
       elsif input == 'load'
         system 'clear'
+        saves = Dir.glob('saves/*').map { |file| file[(file.index('/') + 1)...(file.index('.'))] }
         p 'insert savename'
+        puts saves
         load_name = gets.chomp
         LoadGame.load(load_name)
       elsif input == 'delete'
